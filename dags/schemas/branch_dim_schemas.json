@@ -1,0 +1,31 @@
+{
+    "schemaName":"transaction_facts",
+    "dimensionalFieldSpecs":[
+        {
+            "name":"transaction_id",
+            "dataType":"STRING"
+        },
+        {
+            "name":"account_id",
+            "dataType":"STRING"
+        },
+        {
+            "name":"customer_id",
+            "dataType":"STRING"
+        },
+        {
+            "name":"transaction_type",
+            "dataType":"STRING"
+        },
+        {
+            "name":"Currency",
+            "dataType":"STRING"
+        },
+        {
+            "name":"branch_id",
+            "dataType":"STRING"
+        }
+    ],
+    "metricFieldSpecs":[],
+    "dateTimeFieldSpecs":[]
+}

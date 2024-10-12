@@ -240,37 +240,52 @@ services:
       - fazan
 
   pinot-controller:
-    image: apachepinot/pinot:release-0.7.1
-    hostname: pinot-controller
+    image: apachepinot/pinot:1.2.0
+    container_name: pinot-controller
+    restart: unless-stopped
     volumes:
       - ./pinot-docker-demo/pinot/controller:/tmp/data/controller
     ports:
       - "9000:9000"
+    environment:
+      - JAVA_OPTS="-Dplugins.dir=/opt/pinot/plugins -"
     command: StartController -zkAddress zookeeper:2181
     depends_on:
-      - kafka
+      - zookeeper
+    networks:
+      - fazan
+  
   pinot-broker:
-    image: apachepinot/pinot:release-0.7.1
-    hostname: pinot-broker
+    image: apachepinot/pinot:1.2.0
+    container_name: "pinot-broker"
     ports:
       - "8099:8099"
-    command: StartBroker -zkAddress zookeeper:2181
+    command: "StartBroker -zkAddress zookeeper:2181"
+    environment:
+      - JAVA_OPTS="-Dplugins.dir=/opt/pinot/plugins -"
     depends_on:
-      - zookeeper
-      - kafka
       - pinot-controller
+    restart: unless-stopped
+    networks:
+      - fazan
+
   pinot-server:
-    image: apachepinot/pinot:release-0.7.1
-    hostname: pinot-server
+    image: apachepinot/pinot:1.2.0
+    container_name: "pinot-server"
     volumes:
       - ./pinot-docker-demo/pinot/server:/tmp/data/server
+    environment:
+      - JAVA_OPTS="-Dplugins.dir=/opt/pinot/plugins -"
     ports:
       - "8098:8098"
-    command: StartServer -zkAddress zookeeper:2181
+    command: "StartServer -zkAddress zookeeper:2181"
+    restart: unless-stopped
     depends_on:
-      - zookeeper
-      - kafka
-      - pinot-controller
+      - pinot-broker
+    networks:
+      - fazan
+
+
 
 volumes:
   postgres-db-volume:
